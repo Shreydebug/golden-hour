@@ -58,7 +58,7 @@ export function WeatherCard({ weather, loading, quality }: WeatherCardProps) {
                   );
                 })()}
                 <div>
-                  <p className="text-illuminated text-8xl font-extralight tabular-nums tracking-tight sm:text-9xl">
+                  <p className="text-illuminated text-6xl font-extralight tabular-nums tracking-tight sm:text-7xl">
                     {formatTemperature(weather.temperature)}
                   </p>
                   <p className="mt-2 text-lg font-light tracking-wide">

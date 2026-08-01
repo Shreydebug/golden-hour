@@ -71,7 +71,7 @@ export function Footer() {
         className="pointer-events-none flex justify-center px-6 pb-6"
       >
         <MaskReveal delay={0.1}>
-          <span className="block text-[clamp(3rem,12.5vw,15rem)] font-extralight leading-[0.9] tracking-[-0.04em] text-foreground/[0.045] select-none">
+          <span className="block text-[clamp(2.25rem,7vw,8rem)] font-extralight leading-[0.95] tracking-[-0.03em] text-foreground/[0.045] select-none">
             Golden hour
           </span>
         </MaskReveal>

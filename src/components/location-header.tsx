@@ -36,7 +36,7 @@ export function LocationHeader({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: durations.base, delay: 0.15, ease: easing.out }}
-            style={{ ...typography.eyebrow }}
+            style={{ ...typography.eyebrow, fontSize: 14, letterSpacing: 0.14 }}
             className="mb-5 text-muted-foreground"
           >
             {getGreeting()}
@@ -46,11 +46,11 @@ export function LocationHeader({
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: durations.slow, delay: 0.22, ease: easing.out }}
-            style={{ ...typography.h1 }}
-            className="flex items-center gap-4"
+            style={{ fontSize: 18, lineHeight: 1.3, letterSpacing: -0.01, fontWeight: 400 }}
+            className="flex items-center gap-3"
           >
             <MapPin
-              className="h-7 w-7 shrink-0 text-foreground/40"
+              className="h-4 w-4 shrink-0 text-foreground/40"
               strokeWidth={1.25}
             />
             <span className="text-illuminated tracking-tight">

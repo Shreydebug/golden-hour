@@ -88,7 +88,7 @@ export function SunCard({
             />
             <span style={{ ...typography.eyebrow }}>Sunrise</span>
           </div>
-          <p className="text-illuminated mt-7 text-6xl font-extralight tabular-nums tracking-tight sm:text-7xl">
+          <p className="text-illuminated mt-7 text-4xl font-extralight tabular-nums tracking-tight sm:text-5xl">
             {formatTime(times.sunrise)}
           </p>
           <p className="mt-4 text-sm font-light text-muted-foreground">
@@ -101,7 +101,7 @@ export function SunCard({
             <Sunset className="h-4 w-4 text-foreground/40" strokeWidth={1.5} />
             <span style={{ ...typography.eyebrow }}>Sunset</span>
           </div>
-          <p className="text-illuminated mt-7 text-6xl font-extralight tabular-nums tracking-tight sm:text-7xl">
+          <p className="text-illuminated mt-7 text-4xl font-extralight tabular-nums tracking-tight sm:text-5xl">
             {formatTime(times.sunset)}
           </p>
           <p className="mt-4 text-sm font-light text-muted-foreground">

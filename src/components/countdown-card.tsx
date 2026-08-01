@@ -25,7 +25,7 @@ function Digit({ value, label }: { value: number; label: string }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: durations.fast, ease: easing.apple }}
-            className="text-illuminated block text-5xl font-extralight tabular-nums tracking-tight sm:text-6xl"
+            className="text-illuminated block text-4xl font-extralight tabular-nums tracking-tight"
           >
             {pad(value)}
           </motion.span>
@@ -51,7 +51,7 @@ export function CountdownCard({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: durations.base, ease: easing.out }}
-        className="text-2xl font-light tracking-tight text-accent-foreground sm:text-3xl"
+        className="text-xl font-light tracking-tight text-accent-foreground sm:text-2xl"
       >
         {activeLabel}
       </motion.p>
@@ -64,13 +64,13 @@ export function CountdownCard({
   const seconds = totalSeconds % 60;
 
   return (
-    <div className="flex items-start gap-3 sm:gap-5">
+    <div className="flex items-start gap-3 sm:gap-4">
       <Digit value={hours} label="Hours" />
-      <span className="mt-0.5 text-4xl font-thin text-muted-foreground/40 sm:text-5xl">
+      <span className="mt-0.5 text-3xl font-thin text-muted-foreground/40">
         :
       </span>
       <Digit value={minutes} label="Minutes" />
-      <span className="mt-0.5 text-4xl font-thin text-muted-foreground/40 sm:text-5xl">
+      <span className="mt-0.5 text-3xl font-thin text-muted-foreground/40">
         :
       </span>
       <Digit value={seconds} label="Seconds" />

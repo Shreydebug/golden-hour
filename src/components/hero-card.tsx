@@ -137,9 +137,9 @@ export function HeroCard({
             </span>
           </motion.div>
 
-          <motion.div style={{ x: headingX, y: headingY }} className="will-change-transform">
+            <motion.div style={{ x: headingX, y: headingY }} className="will-change-transform">
             <motion.h1
-              className="text-[clamp(4.2rem,10.5vw,10rem)] font-extralight leading-[0.95] tracking-[-0.045em]"
+              className="text-[36px] font-extralight leading-[0.98] tracking-[-0.03em] sm:text-[44px] md:text-[60px] lg:text-[72px]"
             >
               <MaskLine delay={0.35}>
                 <span className="text-illuminated">Golden</span>{' '}
@@ -155,7 +155,7 @@ export function HeroCard({
 
           <motion.p
             {...reveal(0.66)}
-            className="mt-10 max-w-md text-[15px] font-light leading-relaxed text-muted-foreground"
+            className="mt-8 max-w-md text-xl font-light leading-relaxed text-muted-foreground"
           >
             {times
               ? `The light arrives ${formatTime(times.bestWindowStart)}. Be there for the deepest colour, the longest shadows, the quietest city.`
@@ -206,7 +206,7 @@ export function HeroCard({
               className="flex flex-col items-start gap-3 lg:items-end"
             >
               <span
-                style={{ fontSize: 128, lineHeight: 0.88, letterSpacing: -0.05 }}
+                style={{ fontSize: 80, lineHeight: 0.9, letterSpacing: -0.04 }}
                 className="text-illuminated font-thin tabular-nums tracking-tighter"
               >
                 {score.toFixed(1)}

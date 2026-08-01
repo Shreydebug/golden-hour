@@ -1,22 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import localFont from 'next/font/local';
 
 import '@/styles/globals.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
-
-const switzer = localFont({
-  variable: '--font-switzer',
-  display: 'swap',
-  preload: true,
-  src: [
-    { path: './fonts/switzer-200.woff2', weight: '200' },
-    { path: './fonts/switzer-300.woff2', weight: '300' },
-    { path: './fonts/switzer-400.woff2', weight: '400' },
-    { path: './fonts/switzer-500.woff2', weight: '500' },
-    { path: './fonts/switzer-600.woff2', weight: '600' },
-  ],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -73,7 +59,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${switzer.variable} antialiased`}>
+      <body className="antialiased">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

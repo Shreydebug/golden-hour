@@ -1,5 +1,5 @@
 export const fonts = {
-  sans: 'var(--font-switzer), ui-sans-serif, system-ui, -apple-system, sans-serif',
+  sans: '"Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif',
 } as const;
 
 export const weights = {
@@ -12,42 +12,42 @@ export const weights = {
 
 export const typography = {
   display: {
-    fontSize: 96,
+    fontSize: 72,
     lineHeight: 0.98,
-    letterSpacing: -0.045,
+    letterSpacing: -0.03,
     fontWeight: weights.light,
   },
   displaySm: {
-    fontSize: 64,
+    fontSize: 40,
     lineHeight: 1.02,
-    letterSpacing: -0.04,
+    letterSpacing: -0.025,
     fontWeight: weights.light,
   },
   h1: {
-    fontSize: 48,
-    lineHeight: 1.08,
-    letterSpacing: -0.03,
+    fontSize: 28,
+    lineHeight: 1.15,
+    letterSpacing: -0.02,
     fontWeight: weights.regular,
   },
   h2: {
-    fontSize: 32,
-    lineHeight: 1.16,
+    fontSize: 26,
+    lineHeight: 1.2,
     letterSpacing: -0.02,
     fontWeight: weights.regular,
   },
   h3: {
-    fontSize: 22,
-    lineHeight: 1.3,
-    letterSpacing: -0.015,
+    fontSize: 19,
+    lineHeight: 1.35,
+    letterSpacing: -0.01,
     fontWeight: weights.regular,
   },
   body: {
-    fontSize: 16,
+    fontSize: 15,
     lineHeight: 1.75,
     fontWeight: weights.regular,
   },
   caption: {
-    fontSize: 13,
+    fontSize: 12,
     lineHeight: 1.5,
     fontWeight: weights.regular,
   },
@@ -59,7 +59,7 @@ export const typography = {
     textTransform: 'uppercase',
   },
   numeric: {
-    fontSize: 32,
+    fontSize: 28,
     lineHeight: 1.1,
     letterSpacing: -0.02,
     fontWeight: weights.light,

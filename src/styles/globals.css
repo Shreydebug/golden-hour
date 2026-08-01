@@ -92,7 +92,7 @@
   --color-crimson: var(--crimson);
   --color-blue-hour: var(--blue-hour);
   --color-indigo-night: var(--indigo-night);
-  --font-sans: var(--font-switzer), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
