@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 const DIAMETER = 32;
 const RADIUS = DIAMETER / 2;
 const SCALE = 1.2;
-const LERP = 0.18;
-const ZOOM_OVER = 1.6;
-const ZOOM_LERP = 0.1;
-const CAPTURE_MS = 150;
+const LERP = 0.38;
+const ZOOM_OVER = 1.35;
+const ZOOM_LERP = 0.14;
+const CAPTURE_MS = 120;
 
 const VERT = `
 attribute vec2 a_pos;
@@ -25,6 +25,7 @@ uniform vec2 uCursor;
 uniform vec2 uRes;
 uniform float uRadius;
 uniform float uScale;
+uniform float uDark;
 uniform int uReady;
 varying vec2 v_uv;
 
@@ -45,19 +46,26 @@ void main(){
   vec2 sampleUV = cuv + dir * (dist / uScale);
 
   vec3 col = texture2D(u_tex, sampleUV).rgb;
-  col *= 1.05;
+  col *= mix(0.982, 1.05, uDark);
 
   float t = dist / rUV;
   float rim = smoothstep(0.85, 1.0, t);
-  col = mix(col, vec3(0.94,0.96,0.99), rim * 0.22);
+  vec3 rimCol = mix(vec3(0.12,0.11,0.09), vec3(0.94,0.96,0.99), uDark);
+  col = mix(col, rimCol, rim * 0.22);
 
   vec2 hl = vec2(-0.24,-0.20) * rUV;
   float h = smoothstep(rUV*0.13, 0.0, length(d - hl));
-  col += vec3(0.14) * h;
+  col += vec3(mix(0.07, 0.14, uDark)) * h;
+
+  float ring = abs(t - 1.0);
+  float line = smoothstep(0.022, 0.0, ring);
+  vec3 lineCol = mix(vec3(0.18,0.16,0.13), vec3(0.98,0.99,1.0), uDark);
+  col = mix(col, lineCol, line * 0.4);
 
   float alpha = mask;
-  alpha = max(alpha, rim * 0.28);
-  alpha = max(alpha, smoothstep(rUV - aa*0.5, rUV, t) * 0.40);
+  alpha = max(alpha, rim * mix(0.42, 0.28, uDark));
+  alpha = max(alpha, smoothstep(rUV - aa*0.5, rUV, t) * 0.45);
+  alpha = max(alpha, line * 0.55);
 
   gl_FragColor = vec4(col, alpha);
 }`;
@@ -115,6 +123,7 @@ function initGL(canvas: HTMLCanvasElement) {
     res:    gl.getUniformLocation(prog, 'uRes'),
     radius: gl.getUniformLocation(prog, 'uRadius'),
     scale:  gl.getUniformLocation(prog, 'uScale'),
+    dark:   gl.getUniformLocation(prog, 'uDark'),
     ready:  gl.getUniformLocation(prog, 'uReady'),
   };
   gl.uniform1i(u.tex, 0);
@@ -133,7 +142,7 @@ function initGL(canvas: HTMLCanvasElement) {
         ready = true;
       } catch { /* tainted – skip */ }
     },
-    draw(cx: number, cy: number, w: number, h: number, zoom: number) {
+    draw(cx: number, cy: number, w: number, h: number, zoom: number, dark: boolean) {
       gl.viewport(0, 0, w, h);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -142,6 +151,7 @@ function initGL(canvas: HTMLCanvasElement) {
       gl.uniform2f(u.res, w, h);
       gl.uniform1f(u.radius, RADIUS * (1 + (zoom - 1) * 0.28));
       gl.uniform1f(u.scale, SCALE * zoom);
+      gl.uniform1f(u.dark, dark ? 1 : 0);
       gl.uniform1i(u.ready, ready ? 1 : 0);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     },
@@ -156,6 +166,19 @@ function initGL(canvas: HTMLCanvasElement) {
 export function CustomCursor() {
   const [coarse, setCoarse] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const themeRef = useRef<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const onTheme = () => {
+      themeRef.current = document.documentElement.classList.contains('dark')
+        ? 'dark'
+        : 'light';
+    };
+    onTheme();
+    const observer = new MutationObserver(onTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (window.matchMedia('(pointer: coarse)').matches) {
@@ -234,7 +257,7 @@ export function CustomCursor() {
       cursor.style.transform =
         `translate3d(${cx - DIAMETER / 2}px, ${cy - DIAMETER / 2}px, 0) scale(${1 + (zoom - 1) * 0.3})`;
 
-      glCtx?.draw(cx, cy, glCanvas.width, glCanvas.height, zoom);
+      glCtx?.draw(cx, cy, glCanvas.width, glCanvas.height, zoom, themeRef.current === 'dark');
 
       raf = requestAnimationFrame(tick);
     }
@@ -279,9 +302,19 @@ export function CustomCursor() {
         width: DIAMETER,
         height: DIAMETER,
         borderRadius: '50%',
-        border: '1px solid rgba(255,255,255,0.20)',
+        border: `1px solid ${
+          themeRef.current === 'dark'
+            ? 'rgba(255,255,255,0.28)'
+            : 'rgba(20,16,12,0.32)'
+        }`,
         background:
-          'radial-gradient(circle at 50% 42%, rgba(255,255,255,0.06) 0%, transparent 70%)',
+          themeRef.current === 'dark'
+            ? 'radial-gradient(circle at 50% 42%, rgba(255,255,255,0.07) 0%, transparent 70%)'
+            : 'radial-gradient(circle at 50% 42%, rgba(20,16,12,0.05) 0%, transparent 70%)',
+        boxShadow:
+          themeRef.current === 'dark'
+            ? '0 0 14px rgba(0,0,0,0.35)'
+            : '0 0 10px rgba(0,0,0,0.12), inset 0 0 8px rgba(255,255,255,0.65)',
         willChange: 'transform',
       }}
     />
