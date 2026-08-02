@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 dev-smoke*.log
+dev*.log
 
 # debug
 npm-debug.log*

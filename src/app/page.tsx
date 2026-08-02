@@ -1,11 +1,11 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useCallback, useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { AnimatedBackground } from '@/components/animated-background';
-import { DottedSun } from '@/components/dotted-sun';
 import { CustomCursor } from '@/components/custom-cursor';
 import { VerticalNav } from '@/components/vertical-nav';
 import { LocationHeader } from '@/components/location-header';
@@ -25,7 +25,6 @@ import { usePlaces } from '@/hooks/use-places';
 
 import { WordReveal } from '@/components/reveal';
 import { getWeatherAdjustedScore } from '@/utils/golden-hour-score';
-import { useResolvedTheme } from '@/components/theme-provider';
 import { durations, easing, typography } from '@/theme';
 import type { PhotographySpot } from '@/types';
 
@@ -38,6 +37,11 @@ const PHASE_LABELS: Record<string, string> = {
   day: 'Daylight · wait for golden hour',
   night: 'Night · golden hour tomorrow',
 };
+
+const HeroSun = dynamic(() =>
+  import('@/components/hero-sun').then((m) => m.HeroSun),
+  { ssr: false }
+);
 
 export default function HomePage() {
   const {
@@ -69,7 +73,7 @@ export default function HomePage() {
   return (
     <main id="top" className="relative min-h-screen overflow-x-clip">
       <AnimatedBackground phase={phase} />
-      <DottedSun theme={useResolvedTheme()} />
+      <HeroSun />
       <CustomCursor />
       <VerticalNav />
 
