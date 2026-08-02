@@ -2,30 +2,23 @@
 
 import dynamic from 'next/dynamic';
 import { useCallback, useState } from 'react';
-import { MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 import { AnimatedBackground } from '@/components/animated-background';
 import { CustomCursor } from '@/components/custom-cursor';
 import { VerticalNav } from '@/components/vertical-nav';
 import { LocationHeader } from '@/components/location-header';
 import { HeroCard } from '@/components/hero-card';
-import { SunCard } from '@/components/sun-card';
-import { WeatherCard } from '@/components/weather-card';
-import { Forecast } from '@/components/forecast';
-import { MapSection } from '@/components/map-section';
-import { NearbyPlaceCard } from '@/components/nearby-place-card';
+import { TodaySection } from '@/components/today-section';
+import { DiscoverSection } from '@/components/discover-section';
+import { PlacesSection } from '@/components/places-section';
 import { Footer } from '@/components/footer';
-import { Skeleton } from '@/components/ui/skeleton';
 
 import { useLocation } from '@/hooks/use-location';
 import { useGoldenHour } from '@/hooks/use-golden-hour';
 import { useWeather } from '@/hooks/use-weather';
 import { usePlaces } from '@/hooks/use-places';
 
-import { WordReveal } from '@/components/reveal';
 import { getWeatherAdjustedScore } from '@/utils/golden-hour-score';
-import { durations, easing, typography } from '@/theme';
 import type { PhotographySpot } from '@/types';
 
 const PHASE_LABELS: Record<string, string> = {
@@ -78,7 +71,6 @@ export default function HomePage() {
       <VerticalNav />
 
       <div className="relative z-10">
-
         <LocationHeader
           hasLocation={Boolean(coords)}
           address={address}
@@ -101,83 +93,38 @@ export default function HomePage() {
           />
         </div>
 
-        <div
-          id="today"
-          className="scroll-mt-24 space-y-36 pb-10 lg:space-y-52"
-        >
-          {goldenHour && (
-            <SunCard
-              times={goldenHour.times}
-              now={goldenHour.now}
-              phaseLabel={PHASE_LABELS[goldenHour.skyPhase]}
-              sunPosition={goldenHour.sunPosition}
-              moonData={goldenHour.moonData}
-            />
-          )}
+        <div className="space-y-36 pb-10 lg:space-y-52">
+          <TodaySection
+            times={goldenHour?.times ?? null}
+            quality={goldenHour?.quality ?? null}
+            adjustedQuality={adjustedQuality}
+            now={goldenHour?.now ?? new Date()}
+            phaseLabel={PHASE_LABELS[goldenHour?.skyPhase ?? 'night']}
+            sunPosition={goldenHour?.sunPosition ?? null}
+            moonData={goldenHour?.moonData ?? null}
+            forecast={goldenHour?.forecast ?? null}
+            weather={weather}
+            weatherLoading={weatherLoading}
+            coords={coords}
+            loading={loading}
+            error={error}
+            isBlocked={permissionStatus === 'denied'}
+            onRequestPermission={requestPermission}
+          />
 
-          {coords && (
-            <WeatherCard
-              weather={weather}
-              loading={weatherLoading}
-              quality={goldenHour?.quality ?? null}
-            />
-          )}
+          <DiscoverSection />
 
-          {goldenHour && <Forecast forecast={goldenHour.forecast} />}
-
-          {coords && (
-            <>
-              <MapSection
-                coords={coords}
-                spots={spots}
-                selectedSpotId={selectedSpotId}
-                onSelectSpot={handleSelectSpot}
-              />
-
-              <section
-                id="spots"
-                className="mx-auto w-full max-w-6xl scroll-mt-28 px-6"
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 36 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{ duration: durations.base, ease: easing.out }}
-                  className="mb-12 flex flex-wrap items-end justify-between gap-4"
-                >
-                  <div>
-                    <h2 style={{ ...typography.h2 }} className="tracking-tight">
-                      <WordReveal text="Nearby photography spots" className="text-fade" />
-                    </h2>
-                    <p className="mt-2 flex items-center gap-2 text-sm font-light text-muted-foreground">
-                      <MapPin className="h-3.5 w-3.5 text-foreground/40" strokeWidth={1.5} />
-                      {spots.length} hand-picked vantage points around you
-                    </p>
-                  </div>
-                </motion.div>
-
-                {spotsLoading && spots.length === 0 ? (
-                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <Skeleton key={i} className="h-80 rounded-2xl bg-secondary/60" />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {spots.map((spot, index) => (
-                      <NearbyPlaceCard
-                        key={spot.id}
-                        spot={spot}
-                        index={index}
-                        selected={spot.id === selectedSpotId}
-                        onSelect={handleSelectSpot}
-                      />
-                    ))}
-                  </div>
-                )}
-              </section>
-            </>
-          )}
+          <PlacesSection
+            coords={coords}
+            spots={spots}
+            spotsLoading={spotsLoading}
+            selectedSpotId={selectedSpotId}
+            onSelectSpot={handleSelectSpot}
+            permissionStatus={permissionStatus}
+            loading={loading}
+            error={error}
+            onRequestPermission={requestPermission}
+          />
         </div>
 
         <Footer />

@@ -23,5 +23,6 @@ export interface PhotographySpot {
   parking: boolean;
   walkingDistance: number;
   bestTime: string;
+  bestViewingDirection: string;
   tags: string[];
 }

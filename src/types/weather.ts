@@ -9,6 +9,7 @@ export interface WeatherData {
   visibility: number;
   pressure: number;
   uvIndex: number;
+  airQualityIndex: number;
   condition: WeatherCondition;
   icon: string;
 }

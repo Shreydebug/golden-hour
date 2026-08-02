@@ -13,7 +13,7 @@ export function Footer() {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: durations.slow, ease: easing.out }}
-      className="hairline relative z-10 mt-48 overflow-hidden"
+      className="relative z-10 mt-48 overflow-hidden"
     >
       <div className="mx-auto max-w-6xl px-6 py-32">
         <div className="flex flex-col gap-24">
@@ -40,20 +40,56 @@ export function Footer() {
             </Reveal>
           </div>
 
+          <Reveal delay={0.2}>
+            <div className="grid gap-12 md:grid-cols-3">
+              <div>
+                <p style={{ ...typography.eyebrow }} className="text-muted-foreground">
+                  The vision
+                </p>
+                <p className="mt-4 text-sm font-light leading-relaxed text-muted-foreground">
+                  Light is temporary. Golden Hour exists so that no beautiful
+                  window of light passes unnoticed — for photographers and for
+                  anyone who simply loves a good sky.
+                </p>
+              </div>
+              <div>
+                <p style={{ ...typography.eyebrow }} className="text-muted-foreground">
+                  How it works
+                </p>
+                <p className="mt-4 text-sm font-light leading-relaxed text-muted-foreground">
+                  SunCalc derives sunrise, sunset, golden hour, blue hour and
+                  twilight windows from your exact coordinates. Open-Meteo
+                  layers live weather, cloud and air quality on top — so the
+                  score reflects the sky as it is, not just as it was.
+                </p>
+              </div>
+              <div>
+                <p style={{ ...typography.eyebrow }} className="text-muted-foreground">
+                  For photographers
+                </p>
+                <p className="mt-4 text-sm font-light leading-relaxed text-muted-foreground">
+                  Know precisely when the light peaks, where to stand, and what
+                  the sky will do — so you arrive early, set up calmly and never
+                  miss the window.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
           <Reveal delay={0.1}>
-            <div className="flex flex-wrap items-center justify-between gap-8 border-t border-border/60 pt-10">
+            <div className="flex flex-wrap items-center justify-between gap-8 pt-10">
               <div className="flex items-center gap-9 text-xs font-light tracking-wide text-muted-foreground">
-                <a href="#top" className="transition-colors duration-500 hover:text-foreground">
-                  Home
-                </a>
                 <a href="#today" className="transition-colors duration-500 hover:text-foreground">
                   Today
                 </a>
-                <a href="#spots" className="transition-colors duration-500 hover:text-foreground">
+                <a href="#discover" className="transition-colors duration-500 hover:text-foreground">
+                  Discover
+                </a>
+                <a href="#places" className="transition-colors duration-500 hover:text-foreground">
                   Places
                 </a>
-                <a href="#map" className="transition-colors duration-500 hover:text-foreground">
-                  Map
+                <a href="#about" className="transition-colors duration-500 hover:text-foreground">
+                  About
                 </a>
               </div>
 

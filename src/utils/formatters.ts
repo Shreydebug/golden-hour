@@ -83,3 +83,11 @@ export function formatDirection(degrees: number): string {
 export function formatAltitude(degrees: number): string {
   return `${Math.round(degrees)}°`;
 }
+
+export function airQualityLabel(aqi: number): string {
+  if (aqi <= 50) return 'Good';
+  if (aqi <= 100) return 'Moderate';
+  if (aqi <= 150) return 'Sensitive';
+  if (aqi <= 200) return 'Unhealthy';
+  return 'Hazardous';
+}

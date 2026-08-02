@@ -1,12 +1,13 @@
 'use client';
 
-import { CloudRain, Droplets, Eye, Sun, Thermometer, Wind } from 'lucide-react';
+import { CloudRain, Droplets, Eye, Leaf, Sun, Thermometer, Wind } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { GlassCard } from '@/components/glass-card';
 import { WordReveal } from '@/components/reveal';
 import { CONDITION_ICONS, CONDITION_LABELS } from '@/lib/weather-icons';
 import {
+  airQualityLabel,
   formatPercentage,
   formatTemperature,
   formatVisibility,
@@ -116,7 +117,7 @@ export function WeatherCard({ weather, loading, quality }: WeatherCardProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
               {[
                 {
                   icon: <CloudRain className="h-4 w-4" strokeWidth={1.5} />,
@@ -137,6 +138,16 @@ export function WeatherCard({ weather, loading, quality }: WeatherCardProps) {
                   icon: <Droplets className="h-4 w-4" strokeWidth={1.5} />,
                   label: 'Humidity',
                   value: formatPercentage(weather.humidity),
+                },
+                {
+                  icon: <Sun className="h-4 w-4" strokeWidth={1.5} />,
+                  label: 'UV index',
+                  value: weather.uvIndex.toFixed(0),
+                },
+                {
+                  icon: <Leaf className="h-4 w-4" strokeWidth={1.5} />,
+                  label: 'Air quality',
+                  value: `${Math.round(weather.airQualityIndex)} · ${airQualityLabel(weather.airQualityIndex)}`,
                 },
               ].map((stat, index) => (
                 <motion.div

@@ -120,7 +120,7 @@ export function SunCard({
           </span>
         </div>
 
-        <div className="divide-y divide-border/60">
+        <div>
           <WindowRow
             label="Morning golden hour"
             start={times.morningGoldenHourStart}
@@ -151,7 +151,7 @@ export function SunCard({
           />
         </div>
 
-        <div className="mt-8 grid grid-cols-3 gap-6 border-t border-border/60 pt-8">
+        <div className="mt-8 grid grid-cols-3 gap-6 pt-8">
           <div>
             <p style={{ ...typography.eyebrow }} className="text-muted-foreground">
               Sun altitude

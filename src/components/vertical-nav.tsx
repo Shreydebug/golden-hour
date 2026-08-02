@@ -6,10 +6,9 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { durations, easing } from '@/theme';
 
 const ITEMS = [
-  { label: 'Home', href: '#top' },
-  { label: 'Explore', href: '#today' },
-  { label: 'Places', href: '#spots' },
-  { label: 'Gallery', href: '#map' },
+  { label: 'Today', href: '#today' },
+  { label: 'Discover', href: '#discover' },
+  { label: 'Places', href: '#places' },
   { label: 'About', href: '#about' },
 ];
 

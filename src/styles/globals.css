@@ -153,6 +153,20 @@
   }
 }
 
+@keyframes marker-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

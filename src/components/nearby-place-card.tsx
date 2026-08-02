@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Navigation, Star } from 'lucide-react';
+import { Compass, Heart, Navigation, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { CATEGORY_LABELS, CATEGORY_VISUALS } from '@/lib/category-visuals';
@@ -25,6 +25,15 @@ export function NearbyPlaceCard({
   const { favoriteSpotIds, toggleFavorite } = useFavoritesStore();
   const isFavorite = favoriteSpotIds.includes(spot.id);
   const visual = CATEGORY_VISUALS[spot.category] ?? CATEGORY_VISUALS.viewpoint;
+
+  const walkMinutes = Math.max(
+    1,
+    Math.round((spot.walkingDistance / 5) * 60)
+  );
+  const driveMinutes = Math.max(
+    2,
+    Math.round((spot.distance / 40) * 60)
+  );
 
   return (
     <motion.article
@@ -103,19 +112,21 @@ export function NearbyPlaceCard({
           {spot.rating.toFixed(1)} · {spot.distance} km · {spot.bestTime}
         </p>
 
-        <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-5">
-          <span className="text-xs font-light text-muted-foreground">
-            {spot.walkingDistance} km walk
+        <div className="mt-6 flex items-center justify-between gap-3 pt-5">
+          <span className="flex items-center gap-1.5 text-xs font-light text-muted-foreground">
+            <Compass className="h-3 w-3 shrink-0 opacity-60" strokeWidth={1.5} />
+            {walkMinutes} min walk · {driveMinutes} min drive · Best view{' '}
+            {spot.bestViewingDirection}
           </span>
           <a
             href={getDirectionsUrl(spot)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="group/link flex items-center gap-1.5 text-xs font-medium transition-colors duration-500 hover:text-foreground"
+            className="group/link flex shrink-0 items-center gap-1.5 text-xs font-medium transition-colors duration-500 hover:text-foreground"
           >
             <Navigation className="h-3.5 w-3.5 transition-transform duration-500 group-hover/link:translate-x-0.5" />
-            Directions
+            Open in Google Maps
           </a>
         </div>
       </div>

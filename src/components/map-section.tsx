@@ -72,14 +72,14 @@ export function MapSection({
 
         const userEl = document.createElement('div');
         userEl.style.cssText =
-          'width:18px;height:18px;border-radius:9999px;background:#FAFAFA;border:3px solid #050505;box-shadow:0 0 0 6px rgba(250,250,250,0.2),0 0 24px rgba(250,250,250,0.55);';
+          'width:18px;height:18px;border-radius:9999px;background:#FAFAFA;border:3px solid #050505;box-shadow:0 0 0 6px rgba(250,250,250,0.2),0 0 24px rgba(250,250,250,0.55);animation:marker-pop .55s cubic-bezier(.22,1,.36,1) both;';
         markers.push(new mapboxgl.Marker({ element: userEl, anchor: 'center' }).setLngLat([coords.longitude, coords.latitude]).addTo(map!));
 
-        spots.forEach((spot) => {
+        spots.forEach((spot, spotIndex) => {
           const selected = spot.id === selectedSpotId;
           const el = document.createElement('div');
           el.innerHTML = `<span style="filter:grayscale(1)">${CATEGORY_EMOJI[spot.category] ?? '📍'}</span>`;
-          el.style.cssText = `width:36px;height:36px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:16px;background:${selected ? '#FAFAFA' : 'rgba(255,255,255,0.95)'};border:${selected ? '2px solid #FAFAFA' : '1px solid rgba(0,0,0,0.1)'};box-shadow:${selected ? '0 4px 16px rgba(255,255,255,0.35)' : '0 4px 16px rgba(0,0,0,0.35)'};cursor:pointer;transition:transform .15s;`;
+          el.style.cssText = `width:36px;height:36px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:16px;background:${selected ? '#FAFAFA' : 'rgba(255,255,255,0.95)'};border:${selected ? '2px solid #FAFAFA' : '1px solid rgba(0,0,0,0.1)'};box-shadow:${selected ? '0 4px 16px rgba(255,255,255,0.35)' : '0 4px 16px rgba(0,0,0,0.35)'};cursor:pointer;transition:transform .15s;animation:marker-pop .45s cubic-bezier(.22,1,.36,1) ${0.08 + spotIndex * 0.06}s both;`;
           el.addEventListener('click', () => {
             const spotObj = spots.find((s) => s.id === spot.id);
             if (spotObj) onSelectSpot(spotObj);
@@ -134,7 +134,7 @@ export function MapSection({
       {MAPBOX_TOKEN ? (
         <div
           ref={containerRef}
-          className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-border shadow-2xl shadow-black/30 sm:h-[500px]"
+          className="relative h-[420px] w-full overflow-hidden rounded-3xl shadow-2xl shadow-black/30 sm:h-[500px]"
         />
       ) : (
         <div className="glass relative flex h-[320px] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl sm:h-[380px]">

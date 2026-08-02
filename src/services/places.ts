@@ -107,6 +107,12 @@ const BEST_TIME_POOL = [
   'Twilight',
 ];
 
+function bestViewingDirectionFor(bestTime: string): string {
+  if (/sunrise|morning/i.test(bestTime)) return 'East';
+  if (/blue/i.test(bestTime)) return 'Southwest';
+  return 'West';
+}
+
 const TAG_SETS: Record<SpotCategory, string[]> = {
   park: ['nature', 'quiet', 'trees', 'trails'],
   viewpoint: ['panoramic', 'cityscape', 'sunset', 'overlook'],
@@ -182,6 +188,8 @@ export function generateNearbySpots(
     const bestTime =
       BEST_TIME_POOL[Math.floor(r2 * BEST_TIME_POOL.length)];
 
+    const bestViewingDirection = bestViewingDirectionFor(bestTime);
+
     spots.push({
       id: `nearby-${i}`,
       name,
@@ -197,6 +205,7 @@ export function generateNearbySpots(
       parking: r3 > 0.4,
       walkingDistance: walkingDist,
       bestTime,
+      bestViewingDirection,
       tags: [...tags, bestTime.toLowerCase().replace(/\s+/g, ' ')],
     });
   }

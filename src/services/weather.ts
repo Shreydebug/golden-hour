@@ -1,6 +1,7 @@
 import type { GeoCoordinates, WeatherData, WeatherCondition } from '@/types';
 
 const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
+const OPEN_METEO_AQI_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality';
 
 const WMO_CONDITIONS: Record<number, WeatherCondition> = {
   0: 'clear',
@@ -57,6 +58,33 @@ interface OpenMeteoResponse {
   };
 }
 
+async function fetchAirQualityIndex(
+  coords: GeoCoordinates
+): Promise<number | null> {
+  try {
+    const params = new URLSearchParams({
+      latitude: String(coords.latitude),
+      longitude: String(coords.longitude),
+      current: 'us_aqi',
+      timezone: 'auto',
+    });
+    const res = await fetch(`${OPEN_METEO_AQI_URL}?${params.toString()}`);
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      current?: { us_aqi?: number };
+    };
+    const aqi = data.current?.us_aqi;
+    return typeof aqi === 'number' && isFinite(aqi) ? aqi : null;
+  } catch {
+    return null;
+  }
+}
+
+function mockAirQualityIndex(coords: GeoCoordinates): number {
+  const r = seededRandom(coords.latitude * 7 + coords.longitude * 13 + 42);
+  return Math.round(18 + r * 52);
+}
+
 async function fetchOpenMeteo(
   coords: GeoCoordinates
 ): Promise<WeatherData> {
@@ -76,6 +104,8 @@ async function fetchOpenMeteo(
   const current = data.current ?? {};
   const condition = mapWeatherCode(current.weather_code ?? 0);
 
+  const aqi = await fetchAirQualityIndex(coords);
+
   return {
     temperature: current.temperature_2m ?? 20,
     feelsLike: current.apparent_temperature ?? current.temperature_2m ?? 20,
@@ -87,6 +117,7 @@ async function fetchOpenMeteo(
     visibility: current.visibility ?? 10000,
     pressure: current.pressure_msl ?? 1013,
     uvIndex: data.daily?.uv_index_max?.[0] ?? 0,
+    airQualityIndex: aqi ?? mockAirQualityIndex(coords),
     condition,
     icon: condition,
   };
@@ -183,6 +214,8 @@ export function getMockWeatherData(
         ? Math.round(5000 + r * 10000)
         : Math.round(12000 + r * 8000);
 
+  const airQualityIndex = mockAirQualityIndex(coords);
+
   const windSpeed = Math.round((2 + r * 8) * 10) / 10;
   const windDirection = Math.round(r * 360);
   const pressure = Math.round(1013 + (r - 0.5) * 30);
@@ -220,6 +253,7 @@ export function getMockWeatherData(
     visibility,
     pressure,
     uvIndex,
+    airQualityIndex,
     condition,
     icon: condition,
   };
