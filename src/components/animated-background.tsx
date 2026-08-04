@@ -105,6 +105,7 @@ export function AnimatedBackground({ phase }: AnimatedBackgroundProps) {
       />
 
       <div
+        data-html2canvas-ignore
         className="grain absolute inset-0 opacity-[0.03]"
         style={{ mixBlendMode: 'overlay' }}
       />

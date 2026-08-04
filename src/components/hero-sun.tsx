@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 import { useResolvedTheme } from '@/components/theme-provider';
 
-const COUNT = 14000;
+const COUNT = 2000;
 const ROT_Y = (Math.PI * 2) / 75;
 const ROT_X = (Math.PI * 2) / 240;
 const MAX_TILT_Y = 0.087;
@@ -123,7 +123,7 @@ function SunPoints({ theme }: { theme: 'dark' | 'light' }) {
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uSize: { value: 46 },
+      uSize: { value: 90 },
       uPixelRatio: { value: 1 },
       uRadius: { value: 1 },
       uCamDist: { value: CAM_DIST },
@@ -195,10 +195,19 @@ function SunPoints({ theme }: { theme: 'dark' | 'light' }) {
 
 export function HeroSun() {
   const theme = useResolvedTheme();
+  const [active, setActive] = useState(true);
+
+  useEffect(() => {
+    const onVisibility = () => setActive(!document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () =>
+      document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
 
   return (
     <div
       aria-hidden
+      data-html2canvas-ignore
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
       <div
@@ -220,7 +229,8 @@ export function HeroSun() {
         }}
       />
       <Canvas
-        dpr={[1, 1.5]}
+        dpr={[1, 1.25]}
+        frameloop={active ? 'always' : 'never'}
         camera={{ position: [0, 0, CAM_DIST], fov: 35 }}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
         style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
