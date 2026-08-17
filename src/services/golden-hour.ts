@@ -101,15 +101,36 @@ export function calculateGoldenHourTimes(
   const eveningBlueHourStart = sunset;
   const eveningBlueHourEnd = civilTwilightEnd;
 
-  const inMorning =
-    date >= morningGoldenHourStart && date <= morningGoldenHourEnd;
-  const inEvening =
-    date >= eveningGoldenHourStart && date <= eveningGoldenHourEnd;
+  const nowMs = date.getTime();
+  const morningStartMs = morningGoldenHourStart.getTime();
+  const morningEndMs = morningGoldenHourEnd.getTime();
+  const eveningStartMs = eveningGoldenHourStart.getTime();
+  const eveningEndMs = eveningGoldenHourEnd.getTime();
 
-  const bestWindowLabel: 'Morning' | 'Evening' =
-    inEvening || (!inMorning && date >= solarNoon) ? 'Evening' : 'Morning';
-  const bestWindowStart =
-    bestWindowLabel === 'Morning' ? morningGoldenHourStart : eveningGoldenHourStart;
+  let bestWindowLabel: 'Morning' | 'Evening';
+  let bestWindowStart: Date;
+
+  if (nowMs < morningStartMs) {
+    bestWindowLabel = 'Morning';
+    bestWindowStart = morningGoldenHourStart;
+  } else if (nowMs <= morningEndMs) {
+    bestWindowLabel = 'Morning';
+    bestWindowStart = morningGoldenHourStart;
+  } else if (nowMs < eveningStartMs) {
+    bestWindowLabel = 'Evening';
+    bestWindowStart = eveningGoldenHourStart;
+  } else if (nowMs <= eveningEndMs) {
+    bestWindowLabel = 'Evening';
+    bestWindowStart = eveningGoldenHourStart;
+  } else {
+    bestWindowLabel = 'Morning';
+    const tomorrow = new Date(date);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    bestWindowStart = ensureDate(
+      SunCalc.getTimes(tomorrow, latitude, longitude).sunrise,
+      new Date(tomorrow.getTime() + 6 * 60 * 60 * 1000)
+    );
+  }
 
   return {
     sunrise,
