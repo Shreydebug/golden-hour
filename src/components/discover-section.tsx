@@ -1,17 +1,25 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Compass, Gem, Sparkles, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { WordReveal } from '@/components/reveal';
 import { durations, easing, typography } from '@/theme';
+import { getStatePlaces, type StatePlace } from '@/data/state-places';
+import type { Address } from '@/types';
 
-interface DiscoverItem {
-  src: string;
-  name: string;
-  place: string;
-  note: string;
-  score?: string;
+type DiscoverItem = StatePlace;
+
+const FALLBACK_IMAGE =
+  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80';
+
+function handleImageError(event: React.SyntheticEvent<HTMLImageElement>) {
+  const img = event.currentTarget;
+  if (img.dataset.fallback !== '1') {
+    img.dataset.fallback = '1';
+    img.src = FALLBACK_IMAGE;
+  }
 }
 
 const FEATURED: DiscoverItem[] = [
@@ -172,6 +180,7 @@ function ImageCard({
         src={item.src}
         alt={item.name}
         loading="lazy"
+        onError={handleImageError}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
@@ -204,7 +213,21 @@ function ImageCard({
   );
 }
 
-export function DiscoverSection() {
+export function DiscoverSection({ address }: { address: Address | null }) {
+  const statePlaces = useMemo(() => getStatePlaces(address), [address]);
+
+  const featured = statePlaces ? statePlaces.items.slice(0, 3) : FEATURED;
+  const curated = statePlaces ? statePlaces.items.slice(3, 9) : CURATED;
+  const gems = statePlaces ? statePlaces.items.slice(9, 12) : GEMS;
+  const trending = statePlaces ? statePlaces.items.slice(12, 15) : TRENDING;
+
+  const title = statePlaces?.title ?? 'Places worth the drive';
+  const sub =
+    statePlaces?.sub ??
+    'Featured locations, curated light and the spots everyone is talking about.';
+
+  const showGemsTrending = gems.length > 0 || trending.length > 0;
+
   return (
     <motion.section
       id="discover"
@@ -214,14 +237,10 @@ export function DiscoverSection() {
       transition={{ duration: durations.slow, ease: easing.out }}
       className="mx-auto w-full max-w-6xl scroll-mt-28 px-6"
     >
-      <SectionHeader
-        eyebrow="Discover"
-        title="Places worth the drive"
-        sub="Featured locations, curated light and the spots everyone is talking about."
-      />
+      <SectionHeader eyebrow="Discover" title={title} sub={sub} />
 
       <div className="grid gap-5 md:grid-cols-3">
-        {FEATURED.map((item, index) => (
+        {featured.map((item, index) => (
           <ImageCard
             key={item.name}
             item={item}
@@ -231,73 +250,82 @@ export function DiscoverSection() {
         ))}
       </div>
 
-      <div className="mt-16">
-        <SectionHeader
-          eyebrow="Curated"
-          title="Golden hour photography"
-          sub="A quiet edit of the light you're waiting for."
-        />
-        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
-          {CURATED.map((item, index) => (
-            <motion.figure
-              key={item.name}
-              initial={{ opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{
-                duration: durations.base,
-                delay: (index % 3) * 0.08,
-                ease: easing.out,
-              }}
-              className="group relative mb-5 overflow-hidden rounded-3xl break-inside-avoid"
-            >
-              <img
-                src={item.src}
-                alt={item.name}
-                loading="lazy"
-                className="aspect-[4/3] w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+      {curated.length > 0 && (
+        <div className="mt-16">
+          <SectionHeader
+            eyebrow="Curated"
+            title="Golden hour photography"
+            sub="A quiet edit of the light you're waiting for."
+          />
+          <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
+            {curated.map((item, index) => (
+              <motion.figure
+                key={item.name}
+                initial={{ opacity: 0, y: 26 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{
+                  duration: durations.base,
+                  delay: (index % 3) * 0.08,
+                  ease: easing.out,
+                }}
+                className="group relative mb-5 overflow-hidden rounded-3xl break-inside-avoid"
+              >
+                <img
+                  src={item.src}
+                  alt={item.name}
+                  loading="lazy"
+                  onError={handleImageError}
+                  className="aspect-[4/3] w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 transition-opacity duration-700 group-hover:opacity-90" />
+                <figcaption className="absolute bottom-4 left-5">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">
+                    {item.place}
+                  </p>
+                  <p className="mt-0.5 text-sm font-light tracking-wide text-white/95">
+                    {item.name}
+                  </p>
+                </figcaption>
+              </motion.figure>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {showGemsTrending && (
+        <div className="mt-16 grid gap-10 lg:grid-cols-2">
+          {gems.length > 0 && (
+            <div>
+              <SectionHeader
+                eyebrow="Hidden gems"
+                title="Off the map"
+                sub="A little quieter, a little rarer."
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 transition-opacity duration-700 group-hover:opacity-90" />
-              <figcaption className="absolute bottom-4 left-5">
-                <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">
-                  {item.place}
-                </p>
-                <p className="mt-0.5 text-sm font-light tracking-wide text-white/95">
-                  {item.name}
-                </p>
-              </figcaption>
-            </motion.figure>
-          ))}
-        </div>
-      </div>
+              <div className="grid gap-5 sm:grid-cols-3">
+                {gems.map((item, index) => (
+                  <ImageCard key={item.name} item={item} index={index} compact />
+                ))}
+              </div>
+            </div>
+          )}
 
-      <div className="mt-16 grid gap-10 lg:grid-cols-2">
-        <div>
-          <SectionHeader
-            eyebrow="Hidden gems"
-            title="Off the map"
-            sub="A little quieter, a little rarer."
-          />
-          <div className="grid gap-5 sm:grid-cols-3">
-            {GEMS.map((item, index) => (
-              <ImageCard key={item.name} item={item} index={index} compact />
-            ))}
-          </div>
+          {trending.length > 0 && (
+            <div>
+              <SectionHeader
+                eyebrow="Trending"
+                title="Talked about this week"
+                sub="The spots everyone is sharing right now."
+              />
+              <div className="grid gap-5 sm:grid-cols-3">
+                {trending.map((item, index) => (
+                  <ImageCard key={item.name} item={item} index={index} compact />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-
-        <div>
-          <SectionHeader
-            eyebrow="Trending"
-            title="Talked about this week"
-            sub="The spots everyone is sharing right now."
-          />
-          <div className="grid gap-5 sm:grid-cols-3">
-            {TRENDING.map((item, index) => (
-              <ImageCard key={item.name} item={item} index={index} compact />
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[11px] font-light uppercase tracking-[0.18em] text-muted-foreground/60">
         <span className="flex items-center gap-2">

@@ -1,6 +1,6 @@
 'use client';
 
-import { Compass, Heart, Navigation, Star } from 'lucide-react';
+import { Compass, Heart, Navigation, Quote, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { CATEGORY_LABELS, CATEGORY_VISUALS } from '@/lib/category-visuals';
@@ -111,6 +111,17 @@ export function NearbyPlaceCard({
           <Star className="h-3 w-3 fill-white/50 text-white/50" />
           {spot.rating.toFixed(1)} · {spot.distance} km · {spot.bestTime}
         </p>
+
+        {spot.review && (
+          <p className="mt-4 border-l border-foreground/10 pl-3 text-xs font-light leading-relaxed text-muted-foreground">
+            <Quote className="mb-1 h-3 w-3 opacity-50" strokeWidth={1.5} />
+            {spot.review}
+            <span className="mt-1.5 block text-[10px] font-medium uppercase tracking-[0.14em] text-foreground/40">
+              {spot.reviewSource}
+              {spot.reviewCount ? ` · ${spot.reviewCount.toLocaleString()} reviews` : ''}
+            </span>
+          </p>
+        )}
 
         <div className="mt-6 flex items-center justify-between gap-3 pt-5">
           <span className="flex items-center gap-1.5 text-xs font-light text-muted-foreground">

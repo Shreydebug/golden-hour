@@ -2,10 +2,14 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { getCitySpots } from '@/data/city-spots';
 import { generateNearbySpots } from '@/services/places';
-import type { GeoCoordinates, PhotographySpot } from '@/types';
+import type { Address, GeoCoordinates, PhotographySpot } from '@/types';
 
-export function usePlaces(coords: GeoCoordinates | null) {
+export function usePlaces(
+  coords: GeoCoordinates | null,
+  address: Address | null
+) {
   const [spots, setSpots] = useState<PhotographySpot[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -18,13 +22,14 @@ export function usePlaces(coords: GeoCoordinates | null) {
 
     setLoading(true);
     const timeout = setTimeout(() => {
-      setSpots(generateNearbySpots(coords));
+      const curated = getCitySpots(address);
+      setSpots(curated ?? generateNearbySpots(coords));
       setLoading(false);
     }, 400);
 
     return () => clearTimeout(timeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coords?.latitude, coords?.longitude]);
+  }, [coords?.latitude, coords?.longitude, address?.city, address?.region]);
 
   return useMemo(() => ({ spots, loading }), [spots, loading]);
 }

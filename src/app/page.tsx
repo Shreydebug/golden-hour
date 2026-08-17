@@ -49,7 +49,7 @@ export default function HomePage() {
 
   const goldenHour = useGoldenHour(coords);
   const { weather, loading: weatherLoading } = useWeather(coords);
-  const { spots, loading: spotsLoading } = usePlaces(coords);
+  const { spots, loading: spotsLoading } = usePlaces(coords, address);
 
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
 
@@ -112,10 +112,11 @@ export default function HomePage() {
             onRequestPermission={requestPermission}
           />
 
-          <DiscoverSection />
+          <DiscoverSection address={address} />
 
           <PlacesSection
             coords={coords}
+            address={address}
             spots={spots}
             spotsLoading={spotsLoading}
             selectedSpotId={selectedSpotId}

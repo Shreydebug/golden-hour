@@ -25,4 +25,7 @@ export interface PhotographySpot {
   bestTime: string;
   bestViewingDirection: string;
   tags: string[];
+  review?: string;
+  reviewSource?: string;
+  reviewCount?: number;
 }

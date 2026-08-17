@@ -10,10 +10,12 @@ import { NearbyPlaceCard } from '@/components/nearby-place-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { WordReveal } from '@/components/reveal';
 import { durations, easing, typography } from '@/theme';
-import type { GeoCoordinates, PhotographySpot } from '@/types';
+import { normalizeCityName } from '@/data/city-spots';
+import type { Address, GeoCoordinates, PhotographySpot } from '@/types';
 
 interface PlacesSectionProps {
   coords: GeoCoordinates | null;
+  address: Address | null;
   spots: PhotographySpot[];
   spotsLoading: boolean;
   selectedSpotId: string | null;
@@ -26,6 +28,7 @@ interface PlacesSectionProps {
 
 export function PlacesSection({
   coords,
+  address,
   spots,
   spotsLoading,
   selectedSpotId,
@@ -36,6 +39,13 @@ export function PlacesSection({
   onRequestPermission,
 }: PlacesSectionProps) {
   const isBlocked = permissionStatus === 'denied';
+  const city = normalizeCityName(address?.city ?? address?.region ?? null);
+  const cityLabel = city
+    ? city
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    : null;
 
   return (
     <motion.section
@@ -53,7 +63,8 @@ export function PlacesSection({
           </h2>
           <p className="mt-2 flex items-center gap-2 text-sm font-light text-muted-foreground">
             <MapPin className="h-3.5 w-3.5 text-foreground/40" strokeWidth={1.5} />
-            Interactive map · nearby golden hour viewpoints
+            Interactive map · best golden hour spots
+            {cityLabel ? ` in ${cityLabel}` : ''}
           </p>
         </div>
       </div>

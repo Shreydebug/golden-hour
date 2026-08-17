@@ -98,6 +98,17 @@ export function Footer() {
                 Nearby spots are simulated for your area.
               </p>
             </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2 border-t border-foreground/10 pt-8 text-xs font-light tracking-wide text-muted-foreground/80">
+              Crafted by
+              <a
+                href="https://github.com/shreydebug"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground/80 underline decoration-foreground/30 underline-offset-4 transition-colors duration-500 hover:text-golden hover:decoration-golden/60"
+              >
+                Shreyash Sahoo
+              </a>
+            </div>
           </Reveal>
         </div>
       </div>
